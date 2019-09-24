@@ -1,0 +1,49 @@
+const Proyectos = require("../models/Proyectos");
+const Tareas = require("../models/Tareas");
+
+exports.agregarTarea = async (req, res, next) => {
+  // obtenemos el proyecto actual
+  const proyecto = await Proyectos.findOne({
+    where: {
+      url: req.params.url
+    }
+  });
+
+  // leer el valor del input
+  const { tarea } = req.body;
+  const estado = 0;
+  const proyectoId = proyecto.id;
+
+  //   Insertar en la DB
+  const reasultado = await Tareas.create({ tarea, estado, proyectoId });
+  if (!reasultado) {
+    return next();
+  }
+  //   Redireccionar
+  res.redirect(`/proyectos/${req.params.url}`);
+};
+
+exports.cambiarEstadoTarea = async (req, res, next) => {
+  const { id } = req.params;
+  const tarea = await Tareas.findOne({ where: { id } });
+
+  let estado = 0;
+  if (tarea.estado === estado) {
+    estado = 1;
+  }
+  tarea.estado = estado;
+
+  const resultado = await tarea.save();
+  if (!resultado) return next();
+
+  res.status(200).send("Actualizado...");
+};
+
+exports.eliminarTarea = async (req, res) => {
+  const { id } = req.params;
+  // Eliminar la tarea
+  const resultado = await Tareas.destroy({ where: { id } });
+  if (!resultado) return next();
+
+  res.status(200).send("Eliminado...");
+};

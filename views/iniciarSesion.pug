@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+html(lang="es")
+    head
+        include partials/header
+    body.login
+        .contenedor-formulario  
+            h1 Inicia sesión en Uptask
+               
+                if locals.mensajes
+                .alertas
+                    each categoria in Object.keys(locals.mensajes)                      
+                        each error in mensajes[categoria]
+                            .alerta(class=`correcto`)
+                                p= error
+
+            form#formulario.caja.caja-login(method="POST" action="/iniciar-sesion")
+                .campo
+                    label(for="email") E-mail:
+                    input(type="email" name="email" placeholder="tu email" value= email required)
+                .campo 
+                    label(for="password") Password:
+                    input(type="password" name="password" placeholder="Tu contraseña" value= password required)
+                .campo.enviar 
+                    input.boton(type="submit" value="Iniciar sesión")
+                .campo.acciones
+                    a(href="/crear-cuenta") Crear tu cuenta ¡GRATIS!
+                    a(href="/reestablecer") ¿Olvidaste tu contraseña?
+        
